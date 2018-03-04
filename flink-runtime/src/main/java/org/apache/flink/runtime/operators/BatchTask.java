@@ -23,6 +23,7 @@ import org.apache.flink.api.common.accumulators.Accumulator;
 import org.apache.flink.api.common.distributions.DataDistribution;
 import org.apache.flink.api.common.functions.Function;
 import org.apache.flink.api.common.functions.GroupCombineFunction;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.Partitioner;
 import org.apache.flink.api.common.functions.util.FunctionUtils;
 import org.apache.flink.api.common.typeutils.TypeComparator;
@@ -250,7 +251,35 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 
 		// now get the operator class which drives the operation
 		final Class<? extends Driver<S, OT>> driverClass = this.config.getDriver();
-		this.driver = InstantiationUtil.instantiate(driverClass, Driver.class);
+
+
+
+		ClassLoader userCodeClassLoader = getUserCodeClassLoader();
+		S mystub = config.<S>getStubWrapper(userCodeClassLoader).getUserCodeObject((Class<S>)MapFunction.class, userCodeClassLoader);
+
+		if (mystub.getClass().equals(Map1.class))
+			this.driver = new MapDriver1();
+		else if (mystub.getClass().equals(Map2.class))
+			this.driver = new MapDriver2();
+		else if (mystub.getClass().equals(Map3.class))
+			this.driver = new MapDriver3();
+		else if (mystub.getClass().equals(Map4.class))
+			this.driver = new MapDriver4();
+		else if (mystub.getClass().equals(Map5.class))
+			this.driver = new MapDriver5();
+		else if (mystub.getClass().equals(Map6.class))
+			this.driver = new MapDriver6();
+		else if (mystub.getClass().equals(Map7.class))
+			this.driver = new MapDriver7();
+		else if (mystub.getClass().equals(Map8.class))
+			this.driver = new MapDriver8();
+		else if (mystub.getClass().equals(Map9.class))
+			this.driver = new MapDriver9();
+		else if (mystub.getClass().equals(Map10.class))
+			this.driver = new MapDriver10();
+		else
+			this.driver = InstantiationUtil.instantiate(driverClass, Driver.class);
+
 
 		String headName =  getEnvironment().getTaskInfo().getTaskName().split("->")[0].trim();
 		this.metrics = getEnvironment().getMetricGroup()
