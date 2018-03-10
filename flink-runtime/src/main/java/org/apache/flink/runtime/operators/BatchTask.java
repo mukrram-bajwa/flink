@@ -255,7 +255,7 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 
 
 		ClassLoader userCodeClassLoader = getUserCodeClassLoader();
-		S mystub = config.<S>getStubWrapper(userCodeClassLoader).getUserCodeObject((Class<S>)MapFunction.class, userCodeClassLoader);
+		S mystub = config.<S>getStubWrapper(userCodeClassLoader).getUserCodeObject((Class<S>)Function.class, userCodeClassLoader);
 
 		if (mystub.getClass().equals(Map1.class))
 			this.driver = new MapDriver1();
@@ -263,20 +263,18 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 			this.driver = new MapDriver2();
 		else if (mystub.getClass().equals(Map3.class))
 			this.driver = new MapDriver3();
-		else if (mystub.getClass().equals(Map4.class))
-			this.driver = new MapDriver4();
-		else if (mystub.getClass().equals(Map5.class))
-			this.driver = new MapDriver5();
-		else if (mystub.getClass().equals(Map6.class))
-			this.driver = new MapDriver6();
-		else if (mystub.getClass().equals(Map7.class))
-			this.driver = new MapDriver7();
-		else if (mystub.getClass().equals(Map8.class))
-			this.driver = new MapDriver8();
-		else if (mystub.getClass().equals(Map9.class))
-			this.driver = new MapDriver9();
-		else if (mystub.getClass().equals(Map10.class))
-			this.driver = new MapDriver10();
+		else if (mystub.getClass().equals(FlatMap1.class))
+			this.driver = new FlatMapDriver1();
+		else if (mystub.getClass().equals(FlatMap2.class))
+			this.driver = new FlatMapDriver2();
+		else if (mystub.getClass().equals(FlatMap3.class))
+			this.driver = new FlatMapDriver3();
+		else if (mystub.getClass().equals(Reduce1.class))
+			this.driver = new ReduceDriver1();
+		else if (mystub.getClass().equals(Reduce2.class))
+			this.driver = new ReduceDriver2();
+		else if (mystub.getClass().equals(Reduce3.class))
+			this.driver = new ReduceDriver3();
 		else
 			this.driver = InstantiationUtil.instantiate(driverClass, Driver.class);
 
