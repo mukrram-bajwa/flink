@@ -117,7 +117,7 @@ public class ReduceDriver2<T> implements Driver<ReduceFunction<T>, T> {
 		final TypeComparator<T> comparator = this.comparator;
 		
 		final ReduceFunction<T> function = (ReduceFunction<T>) new Reduce2();
-		final Collector<T> output = new CountingCollector<>(this.taskContext.getOutputCollector(), numRecordsOut);
+		final CountingCollector<T> output = new CountingCollector<>(this.taskContext.getOutputCollector(), numRecordsOut);
 
 		if (objectReuseEnabled) {
 			// We only need two objects. The first reference stores results and is

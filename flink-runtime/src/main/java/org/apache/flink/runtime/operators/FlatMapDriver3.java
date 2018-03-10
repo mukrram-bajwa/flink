@@ -91,7 +91,7 @@ public class FlatMapDriver3<IT, OT> implements Driver<FlatMapFunction<IT, OT>, O
 		// cache references on the stack
 		final MutableObjectIterator<IT> input = this.taskContext.getInput(0);
 		final FlatMapFunction<IT, OT> function = (FlatMapFunction<IT, OT>) new FlatMap3();
-		final Collector<OT> output = new CountingCollector<>(this.taskContext.getOutputCollector(), numRecordsOut);
+		final CountingCollector<OT> output = new CountingCollector<>(this.taskContext.getOutputCollector(), numRecordsOut);
 
 		if (objectReuseEnabled) {
 			IT record = this.taskContext.<IT>getInputSerializer(0).getSerializer().createInstance();

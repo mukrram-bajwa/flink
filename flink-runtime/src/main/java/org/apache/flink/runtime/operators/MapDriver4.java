@@ -85,7 +85,7 @@ public class MapDriver4<IT, OT> implements Driver<MapFunction<IT, OT>, OT> {
 		// cache references on the stack
 		final MutableObjectIterator<IT> input = this.taskContext.getInput(0);
 		final MapFunction<IT, OT> function = (MapFunction<IT, OT>)new Map4();
-		final Collector<OT> output = new CountingCollector<>(this.taskContext.getOutputCollector(), numRecordsOut);
+		final CountingCollector<OT> output = new CountingCollector<>(this.taskContext.getOutputCollector(), numRecordsOut);
 
 		if (objectReuseEnabled) {
 			IT record = this.taskContext.<IT>getInputSerializer(0).getSerializer().createInstance();
