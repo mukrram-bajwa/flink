@@ -16,14 +16,15 @@
  * limitations under the License.
  */
 
-package org.apache.flink.examples.java.wordcount;
+package org.apache.flink.examples.java.driver;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.io.DiscardingOutputFormat;
+import org.apache.flink.runtime.operators.FlatMap1;
 
 @SuppressWarnings("serial")
-public class MultipleMaps {
+public class MultipleFlatMaps {
 
 	private static int n = 20;
 	private static long[] times = new long[n];
@@ -31,27 +32,20 @@ public class MultipleMaps {
 	public static void main(String[] args) throws Exception {
 
 		for (int i=0; i<n; i++)
-			run(i);
+			run(i, args[0]);
 		for (int i=0; i<n; i++)
 			System.out.println(times[i]);
 	}
 
-	public static void run(int i) throws Exception {
+	public static void run(int i, String filePath) throws Exception {
 
 		ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 		env.setParallelism(1);
-		DataSet<Long> xs = env.generateSequence(1, 100*1000*10);
+		DataSet<String> xs = env.readTextFile(filePath);
 
-		xs.map(new org.apache.flink.runtime.operators.Map1()).output(new DiscardingOutputFormat<>());
-		xs.map(new org.apache.flink.runtime.operators.Map2()).output(new DiscardingOutputFormat<>());
-		xs.map(new org.apache.flink.runtime.operators.Map3()).output(new DiscardingOutputFormat<>());
-		xs.map(new org.apache.flink.runtime.operators.Map4()).output(new DiscardingOutputFormat<>());
-		xs.map(new org.apache.flink.runtime.operators.Map5()).output(new DiscardingOutputFormat<>());
-		xs.map(new org.apache.flink.runtime.operators.Map6()).output(new DiscardingOutputFormat<>());
-		xs.map(new org.apache.flink.runtime.operators.Map7()).output(new DiscardingOutputFormat<>());
-		xs.map(new org.apache.flink.runtime.operators.Map8()).output(new DiscardingOutputFormat<>());
-		xs.map(new org.apache.flink.runtime.operators.Map9()).output(new DiscardingOutputFormat<>());
-		xs.map(new org.apache.flink.runtime.operators.Map10()).output(new DiscardingOutputFormat<>());
+		xs.flatMap(new org.apache.flink.runtime.operators.FlatMap1()).output(new DiscardingOutputFormat<>());
+		xs.flatMap(new org.apache.flink.runtime.operators.FlatMap2()).output(new DiscardingOutputFormat<>());
+		xs.flatMap(new org.apache.flink.runtime.operators.FlatMap3()).output(new DiscardingOutputFormat<>());
 
 		long start = System.nanoTime();
 		env.execute();
