@@ -275,6 +275,8 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 			this.driver = new ReduceDriver2();
 		else if (mystub.getClass().equals(Reduce3.class))
 			this.driver = new ReduceDriver3();
+		else if (mystub.getClass().equals(FlatJoin1.class))
+			this.driver = new JoinDriver1();
 		else
 			this.driver = InstantiationUtil.instantiate(driverClass, Driver.class);
 
