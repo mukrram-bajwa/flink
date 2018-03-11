@@ -285,6 +285,12 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 			this.driver = new FlatMapDriver2();
 		else if (mystub.getClass().equals(FlatMap3.class))
 			this.driver = new FlatMapDriver3();
+		else if (mystub.getClass().equals(FlatMap4.class))
+			this.driver = new FlatMapDriver4();
+		else if (mystub.getClass().equals(FlatMap5.class))
+			this.driver = new FlatMapDriver5();
+		else if (mystub.getClass().equals(FlatMap6.class))
+			this.driver = new FlatMapDriver6();
 		else if (mystub.getClass().equals(Reduce1.class))
 			this.driver = new ReduceDriver1();
 		else if (mystub.getClass().equals(Reduce2.class))
