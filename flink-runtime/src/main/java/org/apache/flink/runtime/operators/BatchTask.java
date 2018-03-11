@@ -263,6 +263,14 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 			this.driver = new ComponentIdFilterJoinDrive();
 		else if (mystub.getClass().equals(DuplicateValue.class))
 			this.driver = new DuplicatevalueMapDriver();
+		else if (mystub.getClass().equals(BuildOutgoingEdgeList.class))
+			this.driver = new BuildOutgoingEdgeListGroupReduceDriver();
+		else if (mystub.getClass().equals(Dampener.class))
+			this.driver = new DampenerMapDriver();
+		else if (mystub.getClass().equals(JoinVertexWithEdgesMatch.class))
+			this.driver = new JoinVertexWithEdgesMatchFlatMapDriver();
+		else if (mystub.getClass().equals(RankAssigner.class))
+			this.driver = new RankAssignerMapDriver();
 		else if (mystub.getClass().equals(Map1.class))
 			this.driver = new MapDriver1();
 		else if (mystub.getClass().equals(Map2.class))
