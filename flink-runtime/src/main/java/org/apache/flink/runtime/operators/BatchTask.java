@@ -257,7 +257,13 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 		ClassLoader userCodeClassLoader = getUserCodeClassLoader();
 		S mystub = config.<S>getStubWrapper(userCodeClassLoader).getUserCodeObject((Class<S>)Function.class, userCodeClassLoader);
 
-		if (mystub.getClass().equals(Map1.class))
+		if (mystub.getClass().equals(UndirectEdge.class))
+			this.driver = new UndirectEdgeFlatMapDriver();
+		else if (mystub.getClass().equals(ComponentIdFilter.class))
+			this.driver = new ComponentIdFilterJoinDrive();
+		else if (mystub.getClass().equals(DuplicateValue.class))
+			this.driver = new DuplicatevalueMapDriver();
+		else if (mystub.getClass().equals(Map1.class))
 			this.driver = new MapDriver1();
 		else if (mystub.getClass().equals(Map2.class))
 			this.driver = new MapDriver2();
