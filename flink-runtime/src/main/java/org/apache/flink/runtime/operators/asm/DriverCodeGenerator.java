@@ -30,12 +30,13 @@ public class DriverCodeGenerator extends ClassLoader {
 	}
 
 	public Class generateMapDriver( String oldName, String newName, String driverClassSimpleName) throws Exception {
+		//Get streams of the existing XXXDriver Class.
 		InputStream compiledClass = getResourceAsStream(oldName.replace('.', '/') + ".class");
-		ClassReader classReader = new ClassReader(compiledClass);
-		ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_FRAMES);
-		DriverClassApopter ca = new DriverClassApopter(newName.replace('.', '/'), driverClassSimpleName, classWriter);
+		ClassReader classReader = new ClassReader(compiledClass);                        // Event generator.
+		ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_FRAMES);    // Event consumer.
+		DriverClassApopter ca = new DriverClassApopter(newName.replace('.', '/'), driverClassSimpleName, classWriter);    //Adopter responsible for driver generation at run time.
 		classReader.accept(ca, 0);
-		byte[] bytes = classWriter.toByteArray();
+		byte[] bytes = classWriter.toByteArray();      // Loads newly created driver class to the classLoader.
 		return defineClass(newName, bytes, 0, bytes.length);
 	}
 }

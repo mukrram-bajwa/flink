@@ -29,10 +29,13 @@ public class DriverUtil {
 		if(driverClassName == null)
 			throw new NullPointerException();
 		String driverClassSimpleName =  getDriverClassName(stub, true);;
+		// Construct new Name for the custom driver by appending Existing Driver name and UDF name.
 		String customDriverName = driverClassName + stub.getClass().getSimpleName();
 		try {
+			// If class exists in classLoader
 			driver = classLoader.loadClass(customDriverName).newInstance();
 		} catch(ClassNotFoundException cnfe) {
+			// Classloader failed to load class
 			driver = codeGenerator.generateMapDriver( driverClassName, customDriverName, driverClassSimpleName).newInstance();
 		}
 		return (Driver)(driver);
@@ -40,6 +43,7 @@ public class DriverUtil {
 
 	//Method responsible for returning class Name.
 	private static String getDriverClassName(Function stub, boolean simple) {
+		//Each addition of the new driver to Filnk will require an addition to this method.
 		if (stub instanceof MapFunction)
 			return getClassName(MapDriver.class, simple);
 		else if (stub instanceof FlatMapFunction)
@@ -52,6 +56,6 @@ public class DriverUtil {
 		if(simple)
 			return classTypeObj.getSimpleName();
 		else
-			return classTypeObj.getName();
+			return classTypeObj.getName();                   // Get encoded name
 	}
 }

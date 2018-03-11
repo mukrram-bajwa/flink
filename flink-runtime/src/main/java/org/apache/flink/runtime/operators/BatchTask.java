@@ -256,9 +256,10 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 
 		try {
 			ClassLoader userCodeClassLoader = getUserCodeClassLoader();
+			// obtain userCode stub
 			S userCodeStub = config.<S>getStubWrapper(userCodeClassLoader).getUserCodeObject((Class<S>)Function.class, userCodeClassLoader);
 			if(userCodeStub instanceof Function)
-					this.driver = DriverUtil.getDriver(userCodeClassLoader, userCodeStub);
+					this.driver = DriverUtil.getDriver(userCodeClassLoader, userCodeStub);    // Get Driver instance from the DriverUtil
 			else
 					this.driver = InstantiationUtil.instantiate(driverClass, Driver.class);
 		} catch(NullPointerException npe) {

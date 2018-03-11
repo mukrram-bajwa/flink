@@ -3,7 +3,9 @@ package org.apache.flink.runtime.operators.asm;
 import jdk.internal.org.objectweb.asm.ClassVisitor;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
 import jdk.internal.org.objectweb.asm.Opcodes;
-
+/*
+	Class responsible for the transformations for the Drivers.
+ */
 public class DriverClassApopter extends ClassVisitor{
 
 	String newClassName, oldClassName;
@@ -21,9 +23,10 @@ public class DriverClassApopter extends ClassVisitor{
 
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+		// In ASM, renaming of a class requires method level transformation, because methods has link in the binary to its owner class.
 		MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions);
 		if (methodVisitor != null && (access & Opcodes.ACC_ABSTRACT) == 0)
-			methodVisitor = new DriverMethodAdopter(methodVisitor, newClassName, oldClassName);
+			methodVisitor = new DriverMethodAdopter(methodVisitor, newClassName, oldClassName);  // This method requires transformation as it possibly has link to the owner class.
 		return methodVisitor;
 	}
 }

@@ -21,6 +21,9 @@ package org.apache.flink.runtime.operators.asm;
 import jdk.internal.org.objectweb.asm.MethodVisitor;
 import jdk.internal.org.objectweb.asm.Opcodes;
 
+/*
+	This class is responsible to remove references from the methods to the original  class and add the new references.
+ */
 public class DriverMethodAdopter extends MethodVisitor {
 
 	private final String newClassName, oldClassName;
@@ -31,6 +34,7 @@ public class DriverMethodAdopter extends MethodVisitor {
 		this.oldClassName = oldClassName;
 	}
 
+	// Apply transformation only if the field has reference to the owner class.
 	public void visitFieldInsn(int opcode, String owner, String name, String desc) {
 		if(owner.contains(oldClassName))
 			mv.visitFieldInsn(opcode, newClassName, name, desc);
@@ -38,6 +42,7 @@ public class DriverMethodAdopter extends MethodVisitor {
 			mv.visitFieldInsn(opcode, owner, name, desc);
 	}
 
+	// Apply transformation only if the method has reference to the owner class.
 	public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
 		if(owner.contains(oldClassName))
 			mv.visitMethodInsn(opcode, newClassName, name, desc, itf);
