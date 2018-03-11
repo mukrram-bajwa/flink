@@ -273,6 +273,8 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 			this.driver = new RankAssignerMapDriver();
 		else if (mystub.getClass().equals(Map1.class))
 			this.driver = new MapDriver1();
+		else if (mystub.getClass().equals(Tokenizer.class))
+			this.driver = new TokenizerFlatMapDriver();
 		else if (mystub.getClass().equals(Map2.class))
 			this.driver = new MapDriver2();
 		else if (mystub.getClass().equals(Map3.class))
