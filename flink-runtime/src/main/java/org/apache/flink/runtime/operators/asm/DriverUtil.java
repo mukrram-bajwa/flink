@@ -18,47 +18,40 @@
 
 package org.apache.flink.runtime.operators.asm;
 
-import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.api.common.functions.Function;
-import org.apache.flink.api.common.functions.GroupReduceFunction;
-import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.runtime.operators.Driver;
-import org.apache.flink.runtime.operators.FlatMapDriver;
-import org.apache.flink.runtime.operators.GroupReduceDriver;
-import org.apache.flink.runtime.operators.MapDriver;
+import org.apache.flink.api.common.functions.*;
+import org.apache.flink.runtime.operators.*;
 
 public class DriverUtil {
 	public static Driver getDriver(ClassLoader classLoader, Function stub) throws Exception {
-			DriverCodeGenerator codeGenerator = new DriverCodeGenerator(classLoader);
-			Object driver = null;
-			String driverClassName =  getDriverClassName(stub);
-			if(driverClassName == null)
-				throw new NullPointerException();
-			String driverClassSimpleName =  getDriverClassSimpleName(stub);
-			String customDriverName = driverClassName + stub.getClass().getSimpleName();
-			try {
-				driver = classLoader.loadClass(customDriverName).newInstance();
-			} catch(ClassNotFoundException cnfe) {
-				driver = codeGenerator.generateMapDriver( driverClassName, customDriverName, driverClassSimpleName).newInstance();
-			}
-			return (Driver)(driver);
+		DriverCodeGenerator codeGenerator = new DriverCodeGenerator(classLoader);
+		Object driver = null;
+		String driverClassName =  getDriverClassName(stub, false);
+		if(driverClassName == null)
+			throw new NullPointerException();
+		String driverClassSimpleName =  getDriverClassName(stub, true);;
+		String customDriverName = driverClassName + stub.getClass().getSimpleName();
+		try {
+			driver = classLoader.loadClass(customDriverName).newInstance();
+		} catch(ClassNotFoundException cnfe) {
+			driver = codeGenerator.generateMapDriver( driverClassName, customDriverName, driverClassSimpleName).newInstance();
+		}
+		return (Driver)(driver);
 	}
 
-	private static String getDriverClassName(Function stub) {
+	//Method responsible for returning class Name.
+	private static String getDriverClassName(Function stub, boolean simple) {
 		if (stub instanceof MapFunction)
-			return MapDriver.class.getName();
+			return getClassName(MapDriver.class, simple);
 		else if (stub instanceof FlatMapFunction)
-			return FlatMapDriver.class.getName();
+			return getClassName(FlatMapDriver.class, simple);
 		else
 			return null;
 	}
 
-	private static String getDriverClassSimpleName(Function stub) {
-		if (stub instanceof MapFunction)
-			return MapDriver.class.getSimpleName();
-		else if (stub instanceof FlatMapFunction)
-			return FlatMapDriver.class.getSimpleName();
+	private static String getClassName(Class classTypeObj, boolean simple) {
+		if(simple)
+			return classTypeObj.getSimpleName();
 		else
-			return null;
+			return classTypeObj.getName();
 	}
 }
