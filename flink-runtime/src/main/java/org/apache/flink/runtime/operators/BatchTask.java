@@ -254,14 +254,16 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 		final Class<? extends Driver<S, OT>> driverClass = this.config.getDriver();
 
 
-		ClassLoader userCodeClassLoader = getUserCodeClassLoader();
-		S userCodeStub = config.<S>getStubWrapper(userCodeClassLoader).getUserCodeObject((Class<S>)Function.class, userCodeClassLoader);
-
-
-		if(userCodeStub instanceof Function)
-			this.driver = DriverUtil.getDriver(userCodeClassLoader, userCodeStub);
-		else
+		try {
+			ClassLoader userCodeClassLoader = getUserCodeClassLoader();
+			S userCodeStub = config.<S>getStubWrapper(userCodeClassLoader).getUserCodeObject((Class<S>)Function.class, userCodeClassLoader);
+			if(userCodeStub instanceof Function)
+					this.driver = DriverUtil.getDriver(userCodeClassLoader, userCodeStub);
+			else
+					this.driver = InstantiationUtil.instantiate(driverClass, Driver.class);
+		} catch(NullPointerException npe) {
 			this.driver = InstantiationUtil.instantiate(driverClass, Driver.class);
+		}
 
 		String headName =  getEnvironment().getTaskInfo().getTaskName().split("->")[0].trim();
 		this.metrics = getEnvironment().getMetricGroup()

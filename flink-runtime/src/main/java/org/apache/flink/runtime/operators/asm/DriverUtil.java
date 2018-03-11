@@ -18,9 +18,13 @@
 
 package org.apache.flink.runtime.operators.asm;
 
+import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.Function;
+import org.apache.flink.api.common.functions.GroupReduceFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.runtime.operators.Driver;
+import org.apache.flink.runtime.operators.FlatMapDriver;
+import org.apache.flink.runtime.operators.GroupReduceDriver;
 import org.apache.flink.runtime.operators.MapDriver;
 
 public class DriverUtil {
@@ -28,6 +32,8 @@ public class DriverUtil {
 			DriverCodeGenerator codeGenerator = new DriverCodeGenerator(classLoader);
 			Object driver = null;
 			String driverClassName =  getDriverClassName(stub);
+			if(driverClassName == null)
+				throw new NullPointerException();
 			String driverClassSimpleName =  getDriverClassSimpleName(stub);
 			String customDriverName = driverClassName + stub.getClass().getSimpleName();
 			try {
@@ -41,6 +47,8 @@ public class DriverUtil {
 	private static String getDriverClassName(Function stub) {
 		if (stub instanceof MapFunction)
 			return MapDriver.class.getName();
+		else if (stub instanceof FlatMapFunction)
+			return FlatMapDriver.class.getName();
 		else
 			return null;
 	}
@@ -48,6 +56,8 @@ public class DriverUtil {
 	private static String getDriverClassSimpleName(Function stub) {
 		if (stub instanceof MapFunction)
 			return MapDriver.class.getSimpleName();
+		else if (stub instanceof FlatMapFunction)
+			return FlatMapDriver.class.getSimpleName();
 		else
 			return null;
 	}
