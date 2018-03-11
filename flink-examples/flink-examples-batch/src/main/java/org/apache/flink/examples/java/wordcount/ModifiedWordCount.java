@@ -60,6 +60,8 @@ public class ModifiedWordCount {
 		// set up the execution environment
 		final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
+		env.setParallelism(1);
+		
 		// make parameters available in the web interface
 		env.getConfig().setGlobalJobParameters(params);
 

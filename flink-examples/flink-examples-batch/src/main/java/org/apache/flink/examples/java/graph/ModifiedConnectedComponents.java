@@ -87,6 +87,8 @@ public class ModifiedConnectedComponents {
 		// set up execution environment
 		ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
+		env.setParallelism(1);
+
 		final int maxIterations = params.getInt("iterations", 10);
 
 		// make parameters available in the web interface

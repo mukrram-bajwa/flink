@@ -89,6 +89,8 @@ public class ModifiedPageRank {
 		// set up execution environment
 		final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
+		env.setParallelism(1);
+
 		// make the parameters available to the web ui
 		env.getConfig().setGlobalJobParameters(params);
 
