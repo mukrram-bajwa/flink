@@ -79,6 +79,8 @@ public class ModifiedConnectedComponents {
 
 	public static void main(String... args) throws Exception {
 
+		long start = System.nanoTime();
+
 		// Checking input parameters
 		final ParameterTool params = ParameterTool.fromArgs(args);
 
@@ -120,6 +122,10 @@ public class ModifiedConnectedComponents {
 			System.out.println("Printing result to stdout. Use --output to specify output path.");
 			result.print();
 		}
+
+		long end = System.nanoTime();
+		long elapsed = end - start;
+		System.out.println(String.format("Run Done in %d nano seconds.", elapsed));
 	}
 
 	// *************************************************************************
