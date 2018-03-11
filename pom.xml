@@ -139,6 +139,7 @@ under the License.
 		-->
 		<minikdc.version>2.7.2</minikdc.version>
 		<generated.docs.dir>./docs/_includes/generated</generated.docs.dir>
+		<asm.version>5.1</asm.version>
 	</properties>
 
 	<dependencies>

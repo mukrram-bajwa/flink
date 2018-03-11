@@ -45,6 +45,7 @@ import org.apache.flink.runtime.io.network.partition.consumer.UnionInputGate;
 import org.apache.flink.runtime.jobgraph.tasks.AbstractInvokable;
 import org.apache.flink.runtime.memory.MemoryManager;
 import org.apache.flink.runtime.metrics.groups.OperatorMetricGroup;
+import org.apache.flink.runtime.operators.asm.DriverUtil;
 import org.apache.flink.runtime.operators.chaining.ChainedDriver;
 import org.apache.flink.runtime.operators.chaining.ExceptionInChainedStubException;
 import org.apache.flink.runtime.operators.resettable.SpillingResettableMutableObjectIterator;
@@ -253,55 +254,14 @@ public class BatchTask<S extends Function, OT> extends AbstractInvokable impleme
 		final Class<? extends Driver<S, OT>> driverClass = this.config.getDriver();
 
 
-
 		ClassLoader userCodeClassLoader = getUserCodeClassLoader();
-		S mystub = config.<S>getStubWrapper(userCodeClassLoader).getUserCodeObject((Class<S>)Function.class, userCodeClassLoader);
+		S userCodeStub = config.<S>getStubWrapper(userCodeClassLoader).getUserCodeObject((Class<S>)Function.class, userCodeClassLoader);
 
-		if (mystub.getClass().equals(UndirectEdge.class))
-			this.driver = new UndirectEdgeFlatMapDriver();
-		else if (mystub.getClass().equals(ComponentIdFilter.class))
-			this.driver = new ComponentIdFilterJoinDrive();
-		else if (mystub.getClass().equals(DuplicateValue.class))
-			this.driver = new DuplicatevalueMapDriver();
-		else if (mystub.getClass().equals(BuildOutgoingEdgeList.class))
-			this.driver = new BuildOutgoingEdgeListGroupReduceDriver();
-		else if (mystub.getClass().equals(Dampener.class))
-			this.driver = new DampenerMapDriver();
-		else if (mystub.getClass().equals(JoinVertexWithEdgesMatch.class))
-			this.driver = new JoinVertexWithEdgesMatchFlatMapDriver();
-		else if (mystub.getClass().equals(RankAssigner.class))
-			this.driver = new RankAssignerMapDriver();
-		else if (mystub.getClass().equals(Map1.class))
-			this.driver = new MapDriver1();
-		else if (mystub.getClass().equals(Tokenizer.class))
-			this.driver = new TokenizerFlatMapDriver();
-		else if (mystub.getClass().equals(Map2.class))
-			this.driver = new MapDriver2();
-		else if (mystub.getClass().equals(Map3.class))
-			this.driver = new MapDriver3();
-		else if (mystub.getClass().equals(FlatMap1.class))
-			this.driver = new FlatMapDriver1();
-		else if (mystub.getClass().equals(FlatMap2.class))
-			this.driver = new FlatMapDriver2();
-		else if (mystub.getClass().equals(FlatMap3.class))
-			this.driver = new FlatMapDriver3();
-		else if (mystub.getClass().equals(FlatMap4.class))
-			this.driver = new FlatMapDriver4();
-		else if (mystub.getClass().equals(FlatMap5.class))
-			this.driver = new FlatMapDriver5();
-		else if (mystub.getClass().equals(FlatMap6.class))
-			this.driver = new FlatMapDriver6();
-		else if (mystub.getClass().equals(Reduce1.class))
-			this.driver = new ReduceDriver1();
-		else if (mystub.getClass().equals(Reduce2.class))
-			this.driver = new ReduceDriver2();
-		else if (mystub.getClass().equals(Reduce3.class))
-			this.driver = new ReduceDriver3();
-		else if (mystub.getClass().equals(FlatJoin1.class))
-			this.driver = new JoinDriver1();
+
+		if(userCodeStub instanceof Function)
+			this.driver = DriverUtil.getDriver(userCodeClassLoader, userCodeStub);
 		else
 			this.driver = InstantiationUtil.instantiate(driverClass, Driver.class);
-
 
 		String headName =  getEnvironment().getTaskInfo().getTaskName().split("->")[0].trim();
 		this.metrics = getEnvironment().getMetricGroup()
